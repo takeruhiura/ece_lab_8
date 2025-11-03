@@ -19,41 +19,55 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-
 module ram_tb();
-reg clk,rst,w;
-reg [7:0] data_in;
-reg [2:0] addr;
-wire [7:0] data_out;
-
-ram uut(.clk(clk),.rst(rst),.w(w),.data_in(data_in),.addr(addr),.data_out(data_out));
-
-always #10 clk=~clk;
-
-initial begin
-    clk=0;
-    rst=1;w=0;data_in=8'd0;addr=3'd0;
-    #10 rst=1;
-    #10 rst = 0;
+    reg clk, rst, w;
+    reg [7:0] data_in;
+    reg [2:0] addr;
+    wire [7:0] data_out;
     
-    #20;
+    ram uut (.clk(clk), .rst(rst), .w(w), .data_in(data_in), .addr(addr), .data_out(data_out));
     
-    w=1;
-    @(negedge clk);
-    addr=3'd0; data_in=8'd66;#10;
-    @(negedge clk);
-    addr=3'd1; data_in=8'd123;#10;
-    @(negedge clk);
-    addr=3'd2; data_in=8'd234;#10;
-    @(negedge clk);
-    w=0;
-    @(negedge clk);
-    addr=3'd0;#10;
-    @(negedge clk);
-    addr=3'd1;#10;
-    @(negedge clk);
-    addr=3'd2;#10;
-
-
+    initial begin
+        clk = 0;
+        forever #10 clk = ~clk;
     end
+    
+    initial begin
+        rst = 1;
+        w = 0;
+        data_in = 8'd0;
+        addr = 3'd0;
+        
+        #20;
+        rst = 0;
+        #20;
+        
+        w = 1;
+        
+        @(negedge clk);
+        addr = 3'd0;
+        data_in = 8'd66;
+        
+        @(negedge clk);
+        addr = 3'd1;
+        data_in = 8'd123;
+        
+        @(negedge clk);
+        addr = 3'd2;
+        data_in = 8'd234;
+        
+        @(negedge clk);
+        w = 0;
+        addr = 3'd0;
+        
+        @(negedge clk);
+        addr = 3'd1;
+        
+        @(negedge clk);
+        addr = 3'd2;
+        
+        #40;
+        $finish;
+    end
+    
 endmodule
